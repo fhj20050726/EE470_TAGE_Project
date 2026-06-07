@@ -1,0 +1,62 @@
+
+# number of ways and sets to test with, starting with set 0 and way 0
+# can be used with the random test
+# value of 0 uses default values of cache assoc and sets
+TEST_WAYS ?= 0
+TEST_SETS ?= 0
+
+TRACE_FILE ?= $(PROG).trace
+
+BUILD_COLLATERAL += flist.vcs
+
+ifneq (,$(COH_PROTO))
+CCE_UCODE ?= $(BP_INSTALL_DIR)/lib/$(COH_PROTO).mem
+else
+CCE_UCODE ?= $(TB_PATH)/demo_ucode.mem
+endif
+
+SIM_PROG ?= $(PROG)
+
+AXE_TRACE_P ?= 0
+ifeq ($(AXE_TRACE_P),1)
+AXE_FLAG ?= --axe
+else
+AXE_FLAG ?=
+endif
+
+ME_DEBUG_P ?= 0
+ifeq ($(ME_DEBUG_P),1)
+ME_DEBUG_FLAG = --debug
+else
+ME_DEBUG_FLAG =
+endif
+
+SEED ?= 1
+
+ifneq (,$(COH_PROTO))
+CCE_UCODE ?= $(BP_INSTALL_DIR)/lib/$(COH_PROTO).mem
+else
+CCE_UCODE ?= $(TB_PATH)/demo_ucode.mem
+endif
+
+%/ucode.mem: $(CCE_UCODE)
+	@$(MKDIR) -p $(@D)
+	@$(CP) $< $@
+
+%/test.tr:
+	@$(MKDIR) -p $(@D)
+	$(PYTHON) $(TB_PATH)/me_test.py --out-dir $(@D) --out-file test -n $(NUM_INSTR_P) \
+		-l $(CFG_NUM_LCE) --seed $(SEED) --lce-mode $(LCE_MODE_P) --cce-mode $(CCE_MODE_P) \
+		--test $(ME_TEST_P) --test-ways $(TEST_WAYS) --test-sets $(TEST_SETS) $(ME_DEBUG_FLAG) \
+		--in-dir $(TB_PATH) --in-file $(TRACE_FILE) $(AXE_FLAG)
+	@$(TOUCH) $(@D)/$(ME_TEST_P)_s$(SEED)_l$(NUM_LCE)_n$(NUM_INSTR_P)_m$(LCE_MODE_P)$(CCE_MODE_P).touch
+
+ifeq (1,$(CFG_UCODE))
+RUN_COLLATERAL += ucode.mem
+PLUSARGS += +ucode_mem=ucode.mem
+endif
+
+RUN_COLLATERAL += test.tr
+
+include $(BP_MK_DIR)/Makefile.collateral
+
