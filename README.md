@@ -6,4 +6,4 @@ Most of the project work was performed within the bp_fe/src/v directory. A new f
 
 The test programs used for simulation and evaluation are included in the my_test directory.
 
-This repository is NOT a complete copy of the BlackParrot simulation environment. The original BlackParrot repository contains more than 300,000 files, while fewer than ten files were modified for this project. To keep the repository focused and manageable, only the files directly related to the TAGE implementation and evaluation have been included here.
+This repository is NOT a complete copy of the BlackParrot simulation environment. The original BlackParrot repository contains more than 300,000 files, while fewer than ten files were modified for this project. To keep the repository focused and manageable, only the files directly related to the TAGE implementation and evaluation have been included here. The complete black-parrot-sim repository can be found at https://github.com/black-parrot/black-parrot-sim. 
